@@ -10,6 +10,7 @@ return [
         'sock_type' => SWOOLE_SOCK_TCP,
         'settings' => [
             'worker_num' => swoole_cpu_num(),
+            'daemonize' => true,
         ],
     ],
     'ws' => [
