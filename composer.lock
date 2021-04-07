@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/duiying/Carrot.git",
-                "reference": "90c318e99cf982bc77d5a867c8f4e88390f4bc5c"
+                "reference": "1f2423825c751035756185e4e07d5023cea95e70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/duiying/Carrot/zipball/90c318e99cf982bc77d5a867c8f4e88390f4bc5c",
-                "reference": "90c318e99cf982bc77d5a867c8f4e88390f4bc5c",
+                "url": "https://api.github.com/repos/duiying/Carrot/zipball/1f2423825c751035756185e4e07d5023cea95e70",
+                "reference": "1f2423825c751035756185e4e07d5023cea95e70",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -61,7 +61,7 @@
                 "issues": "https://github.com/duiying/Carrot/issues",
                 "source": "https://github.com/duiying/Carrot/tree/main"
             },
-            "time": "2021-04-07T06:47:11+00:00"
+            "time": "2021-04-07T07:15:40+00:00"
         },
         {
             "name": "nikic/fast-route",
