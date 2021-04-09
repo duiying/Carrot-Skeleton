@@ -11,6 +11,7 @@ return [
         'settings' => [
             'worker_num' => swoole_cpu_num(),
             'daemonize' => true,
+            'task_worker_num' => 128,
         ],
     ],
     'ws' => [
