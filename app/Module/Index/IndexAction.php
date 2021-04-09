@@ -9,10 +9,9 @@ class IndexAction
 {
     public function index($request, $response)
     {
-        echo 333;
         // 投递一个测试 Task
         HttpServer::deliveryTask(TaskConstant::TASK_NAME_TEST, ['key' => 'val']);
-echo 444;
+
         $response->end(
             json_encode(
                 [

@@ -10,8 +10,6 @@ class TestTask
 
     public function test($data = [])
     {
-        echo '1111';
         sleep(5);
-        echo 222;
     }
 }
