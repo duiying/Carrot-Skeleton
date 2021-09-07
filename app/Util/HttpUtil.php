@@ -11,7 +11,7 @@ class HttpUtil
      * @param string $msg
      * @return false|string
      */
-    public static function success($data = [], $msg = '')
+    public static function success($data = [], $msg = 'success')
     {
         return json_encode(
             [
