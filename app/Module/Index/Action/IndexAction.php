@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Module\Index;
+namespace App\Module\Index\Action;
 
 use App\Constant\TaskConstant;
+use App\Module\Index\Logic\IndexLogic;
 use Carrot\Server\HttpServer;
 
 class IndexAction
@@ -20,5 +21,10 @@ class IndexAction
                 ]
             )
         );
+    }
+
+    public function testDB($request, $response)
+    {
+        $logic = IndexLogic::getInstance();
     }
 }

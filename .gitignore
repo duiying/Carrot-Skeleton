@@ -2,3 +2,4 @@
 vendor/
 composer.lock
 master.pid
+.DS_Store
