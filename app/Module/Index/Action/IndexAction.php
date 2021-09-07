@@ -24,7 +24,7 @@ class IndexAction
 
         $logger->info('index 方法打印日志', $data);
 
-        $response->end(HttpUtil::success($data));
+        HttpUtil::success($response, $data);
     }
 
     public function testDB($request, $response)
