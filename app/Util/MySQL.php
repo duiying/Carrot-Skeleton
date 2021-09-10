@@ -2,10 +2,13 @@
 
 namespace App\Util;
 
+use Carrot\Singleton;
 use DuiYing\Logger;
 
 class MySQL
 {
+    use Singleton;
+
     /**
      * @param $host
      * @param $user
