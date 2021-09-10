@@ -3,6 +3,7 @@
   "description": "PHP 协程框架脚手架",
   "type": "project",
   "license": "Apache-2.0",
+  "minimum-stability": "dev",
   "keywords": [
     "php",
     "swoole",
