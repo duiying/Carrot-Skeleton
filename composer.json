@@ -18,7 +18,7 @@
     "php": ">=7.1",
     "ext-swoole": ">=4.4",
     "nikic/fast-route": "^1.3",
-    "duiying/carrot": "dev-main",
+    "duiying/carrot": "dev-master",
     "simple-swoole/db": "~1.0.4"
   },
   "autoload": {
