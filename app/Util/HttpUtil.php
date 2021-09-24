@@ -10,11 +10,10 @@ class HttpUtil
      * @param $response
      * @param array $data
      * @param string $msg
-     * @return mixed
      */
     public static function success($response, $data = [], $msg = 'success')
     {
-        return $response->end(json_encode(
+        $response->end(json_encode(
             [
                 'code'  => 0,
                 'msg'   => $msg,
