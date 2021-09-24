@@ -6,8 +6,10 @@ use DuiYing\Logger;
 
 class MySQLUtil
 {
-    const CODE_CONNECTION_FAIL      = 500;
-    const CODE_CONNECTION_FAIL_MSG  = '连接数据库失败';
+    const CODE_CONNECTION_FAIL              = 500;
+    const CODE_CONNECTION_FAIL_MSG          = '连接数据库失败';
+    const CODE_SQL_ERROR                    = 501;
+    const CODE_SQL_ERROR_MSG                = 'SQL 执行失败';
 
     /**
      * @var \mysqli
@@ -65,6 +67,7 @@ class MySQLUtil
         $sql = trim($sql);
         Logger::getInstance()->info("SQL", $sql);
         $result = $this->conn->query($sql);
+        if ($result === false) throw new \Exception(self::CODE_SQL_ERROR_MSG, self::CODE_SQL_ERROR);
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
@@ -75,6 +78,7 @@ class MySQLUtil
         $sql = trim($sql);
         Logger::getInstance()->info("SQL", $sql);
         $result = $this->conn->query($sql);
+        if ($result === false) throw new \Exception(self::CODE_SQL_ERROR_MSG, self::CODE_SQL_ERROR);
         $count = $result->fetch_assoc()['count'];
         return $count ? intval($count) : 0;
     }
