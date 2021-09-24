@@ -20,6 +20,6 @@ class IndexAction
 
         $list = $db->search('t_user');
 
-        HttpUtil::success($response, $list);
+        return HttpUtil::success($response, $list);
     }
 }
