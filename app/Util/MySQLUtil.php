@@ -53,7 +53,7 @@ class MySQLUtil
         $this->conn->close();
     }
 
-    public function search(string $table, array $where = [], int $p = 0, int $size = 0, array $columns = ['*'], array $orderBy = [])
+    public function search(string $table, array $where = [], int $p = 1, int $size = 0, array $columns = ['*'], array $orderBy = [])
     {
         $sql = sprintf('SELECT %s FROM `%s` ', $this->buildColumn($columns), $table);
         $sql .= $this->buildWhere($where);
@@ -77,6 +77,12 @@ class MySQLUtil
         $result = $this->conn->query($sql);
         $count = $result->fetch_assoc()['count'];
         return $count ? intval($count) : 0;
+    }
+
+    public function find(string $table, array $where = [], array $columns = ['*'], array $orderBy = [])
+    {
+        $list = $this->search($table, $where, 1, 1, $columns, $orderBy);
+        return $list ? (array)$list[0] : [];
     }
 
     public function buildOrderBy($orderBy)

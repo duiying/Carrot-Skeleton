@@ -25,9 +25,9 @@ class IndexAction
         $where = ['id' => ['>', 1]];
         $list = $db->search($table, $where);
         $total = $db->count($table, $where);
-
+        $user = $db->find($table, ['id' => 1]);
         $db->closeConnection();
 
-        return $response->end(HttpUtil::success(['list' => $list, 'total' => $total]));
+        return $response->end(HttpUtil::success(['list' => $list, 'total' => $total, 'user' => $user]));
     }
 }
