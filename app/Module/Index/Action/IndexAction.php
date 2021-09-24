@@ -26,6 +26,7 @@ class IndexAction
         //$list = $db->search($table, $where);
         //$total = $db->count($table, $where);
         $user = $db->find($table, ['id' => 1, 'name' => "duiying'"]);
+        $db->create($table, ['name' => 'test', 'email' => 'test@email.com', 'mobile' => '18899990000']);
         $db->closeConnection();
 
         return $response->end(HttpUtil::success(['user' => $user]));

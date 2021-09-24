@@ -94,7 +94,20 @@ class MySQLUtil
         $keyList = array_keys($data);
         $valueList = array_values($data);
 
-        $sql = sprintf('INSERT INTO `%s` (%s) VALUES ()', $table, $this->buildColumn($keyList));
+        $sql = sprintf('INSERT INTO `%s` (%s) VALUES (', $table, $this->buildColumn($keyList));
+
+        foreach ($valueList as $k => $v) {
+            if (is_string($v)) {
+                $v = $this->conn->real_escape_string($v);
+                $sql .= "'{$v}',";
+            } else {
+                $sql .= "{$v},";
+            }
+        }
+
+        $sql = rtrim($sql, ',');
+        $sql .= ')';
+        Logger::getInstance()->info("SQL", $sql);
     }
 
     public function buildOrderBy($orderBy)
