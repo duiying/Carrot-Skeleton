@@ -120,6 +120,41 @@ class MySQLUtil
         return mysqli_insert_id($this->conn);
     }
 
+    /**
+     * 更新
+     *
+     * @param string $table
+     * @param array $where
+     * @param array $data
+     * @return int
+     * @throws \Exception
+     */
+    public function update(string $table, array $where = [], array $data = [])
+    {
+        if (empty($data)) throw new \Exception(self::CODE_SQL_ERROR_MSG, self::CODE_SQL_ERROR);
+
+        $sql = sprintf('UPDATE `%s` SET', $table);
+
+        foreach ($data as $k => $v) {
+            if (is_string($v)) {
+                // 转义
+                $v = $this->conn->real_escape_string($v);
+                $sql .= " `{$k}` = '$v',";
+            } else {
+                $sql .= " `{$k}` = $v,";
+            }
+        }
+
+        $sql = rtrim($sql, ',');
+        $sql .= $this->buildWhere($where);
+        Logger::getInstance()->info('SQL', $sql);
+
+        $result = $this->conn->query($sql);
+        if ($result === false) throw new \Exception(self::CODE_SQL_ERROR_MSG, self::CODE_SQL_ERROR);
+
+        return $this->conn->affected_rows;
+    }
+
     public function buildOrderBy($orderBy)
     {
         if (empty($orderBy)) return '';
