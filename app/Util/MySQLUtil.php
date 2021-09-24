@@ -55,6 +55,32 @@ class MySQLUtil
         $this->conn->close();
     }
 
+    /**
+     * 执行原生 SQL 语句
+     *
+     * @param string $sql
+     * @return bool|\mysqli_result
+     * @throws \Exception
+     */
+    public function query($sql = '')
+    {
+        $result = $this->conn->query($sql);
+        if ($result === false) throw new \Exception(self::CODE_SQL_ERROR_MSG, self::CODE_SQL_ERROR);
+        return $result;
+    }
+
+    /**
+     * 查询
+     *
+     * @param string $table
+     * @param array $where
+     * @param int $p
+     * @param int $size
+     * @param array|string[] $columns
+     * @param array $orderBy
+     * @return mixed
+     * @throws \Exception
+     */
     public function search(string $table, array $where = [], int $p = 1, int $size = 0, array $columns = ['*'], array $orderBy = [])
     {
         $sql = sprintf('SELECT %s FROM `%s`', $this->buildColumn($columns), $table);
@@ -66,23 +92,39 @@ class MySQLUtil
         }
         $sql = trim($sql);
         Logger::getInstance()->info("SQL", $sql);
-        $result = $this->conn->query($sql);
-        if ($result === false) throw new \Exception(self::CODE_SQL_ERROR_MSG, self::CODE_SQL_ERROR);
+        $result = $this->query($sql);
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
+    /**
+     * 统计
+     *
+     * @param string $table
+     * @param array $where
+     * @return int
+     * @throws \Exception
+     */
     public function count(string $table, array $where = [])
     {
         $sql = sprintf('SELECT count(*) `count` FROM `%s` ', $table);
         $sql .= $this->buildWhere($where);
         $sql = trim($sql);
         Logger::getInstance()->info("SQL", $sql);
-        $result = $this->conn->query($sql);
-        if ($result === false) throw new \Exception(self::CODE_SQL_ERROR_MSG, self::CODE_SQL_ERROR);
+        $result = $this->query($sql);
         $count = $result->fetch_assoc()['count'];
         return $count ? intval($count) : 0;
     }
 
+    /**
+     * 查找单条记录
+     *
+     * @param string $table
+     * @param array $where
+     * @param array|string[] $columns
+     * @param array $orderBy
+     * @return array
+     * @throws \Exception
+     */
     public function find(string $table, array $where = [], array $columns = ['*'], array $orderBy = [])
     {
         $list = $this->search($table, $where, 1, 1, $columns, $orderBy);
@@ -115,8 +157,7 @@ class MySQLUtil
 
         $sql = rtrim($sql, ',');
         $sql .= ')';
-        $result = $this->conn->query($sql);
-        if ($result === false) throw new \Exception(self::CODE_SQL_ERROR_MSG, self::CODE_SQL_ERROR);
+        $this->query($sql);
         return mysqli_insert_id($this->conn);
     }
 
@@ -149,12 +190,36 @@ class MySQLUtil
         $sql .= $this->buildWhere($where);
         Logger::getInstance()->info('SQL', $sql);
 
-        $result = $this->conn->query($sql);
-        if ($result === false) throw new \Exception(self::CODE_SQL_ERROR_MSG, self::CODE_SQL_ERROR);
+        $this->query($sql);
 
         return $this->conn->affected_rows;
     }
 
+    /**
+     * 删除
+     *
+     * @param string $table
+     * @param array $where
+     * @return int
+     * @throws \Exception
+     */
+    public function delete(string $table, array $where = [])
+    {
+        // DELETE 操作是危险操作，必须带 WHERE 条件
+        if (empty($data)) throw new \Exception(self::CODE_SQL_ERROR_MSG, self::CODE_SQL_ERROR);
+        $sql = sprintf('DELETE FROM `%s`');
+        $sql .= $this->buildWhere($where);
+        Logger::getInstance()->info('SQL', $sql);
+        $this->query($sql);
+        return $this->conn->affected_rows;
+    }
+
+    /**
+     * 构建排序条件
+     *
+     * @param $orderBy
+     * @return string
+     */
     public function buildOrderBy($orderBy)
     {
         if (empty($orderBy)) return '';
@@ -168,6 +233,12 @@ class MySQLUtil
         return ' ORDER BY ' . rtrim($str, ',') . ' ';
     }
 
+    /**
+     * 构建查询字段
+     *
+     * @param $columns
+     * @return string
+     */
     public function buildColumn($columns)
     {
         $str = '';
@@ -181,6 +252,12 @@ class MySQLUtil
         return rtrim($str, ',');
     }
 
+    /**
+     * 构建 WHERE 语句
+     *
+     * @param array $where
+     * @return string
+     */
     public function buildWhere($where = [])
     {
         if (empty($where)) return '';

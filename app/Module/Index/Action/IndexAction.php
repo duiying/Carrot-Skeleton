@@ -20,15 +20,10 @@ class IndexAction
         // HttpServer::deliveryTask(TaskConstant::TASK_NAME_TEST, ['key' => 'val']);
 
         $db = MySQLUtil::getInstance()->getConnection('127.0.0.1', 'root', 'WYX*wyx123', 'account');
-
         $table = 't_user';
-        $where = ['id' => ['>', 1]];
-        //$list = $db->search($table, $where);
-        //$total = $db->count($table, $where);
         $user = $db->find($table, ['id' => 1, 'name' => "duiying'"]);
-        //$affected = $db->update($table, ['id' => [1, 2]], ['position' => '测试职位1']);
-        $id = $db->create($table, ['name' => "lili's", 'email' => 'lili@gmail.com', 'mobile' => '19900008888']);
+        $del = $db->delete($table, ['id' => ['>', 4]]);
 
-        return $response->end(HttpUtil::success(['user' => $user, 'id' => $id]));
+        return $response->end(HttpUtil::success(['user' => $user, 'del' => $del]));
     }
 }
