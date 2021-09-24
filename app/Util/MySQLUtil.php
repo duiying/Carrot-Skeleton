@@ -55,12 +55,12 @@ class MySQLUtil
 
     public function search(string $table, array $where = [], int $p = 1, int $size = 0, array $columns = ['*'], array $orderBy = [])
     {
-        $sql = sprintf('SELECT %s FROM `%s` ', $this->buildColumn($columns), $table);
+        $sql = sprintf('SELECT %s FROM `%s`', $this->buildColumn($columns), $table);
         $sql .= $this->buildWhere($where);
         $sql .= $this->buildOrderBy($orderBy);
         if ($p && $size) {
             $offset = ($p - 1) * $size;
-            $sql .= sprintf('LIMIT %d,%d ', $offset, $size);
+            $sql .= sprintf(' LIMIT %d,%d ', $offset, $size);
         }
         $sql = trim($sql);
         Logger::getInstance()->info("SQL", $sql);
@@ -95,7 +95,7 @@ class MySQLUtil
             $str .= sprintf("`%s` %s,", $k, $v);
         }
 
-        return 'ORDER BY ' . rtrim($str, ',') . ' ';
+        return ' ORDER BY ' . rtrim($str, ',') . ' ';
     }
 
     public function buildColumn($columns)
@@ -145,6 +145,6 @@ class MySQLUtil
             }
         }
 
-        return 'WHERE ' . ltrim(trim($whereStr), 'AND');
+        return ' WHERE ' . ltrim(trim($whereStr), 'AND');
     }
 }
