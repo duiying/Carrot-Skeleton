@@ -41,6 +41,7 @@ class MySQLUtil
         $this->conn = mysqli_connect($host, $user, $pass, $db, $port);
         if ($this->conn === false) throw new \Exception(self::CODE_CONNECTION_FAIL_MSG, self::CODE_CONNECTION_FAIL);
         mysqli_set_charset($this->conn, $charset);
+        $this->conn->options(MYSQLI_OPT_INT_AND_FLOAT_NATIVE, 1);
         return $this;
     }
 
@@ -65,6 +66,17 @@ class MySQLUtil
         Logger::getInstance()->info("SQL", $sql);
         $result = $this->conn->query($sql);
         return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function count(string $table, array $where = [])
+    {
+        $sql = sprintf('SELECT count(*) `count` FROM `%s` ', $table);
+        $sql .= $this->buildWhere($where);
+        $sql = trim($sql);
+        Logger::getInstance()->info("SQL", $sql);
+        $result = $this->conn->query($sql);
+        $count = $result->fetch_assoc()['count'];
+        return $count ? intval($count) : 0;
     }
 
     public function buildOrderBy($orderBy)

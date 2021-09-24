@@ -21,10 +21,13 @@ class IndexAction
 
         $db = MySQLUtil::getInstance()->getConnection('127.0.0.1', 'root', 'WYX*wyx123', 'account');
 
-        $list = $db->search('t_user');
+        $table = 't_user';
+        $where = ['id' => ['>', 1]];
+        $list = $db->search($table, $where);
+        $total = $db->count($table, $where);
 
         $db->closeConnection();
 
-        return $response->end(HttpUtil::success(['list' => $list]));
+        return $response->end(HttpUtil::success(['list' => $list, 'total' => $total]));
     }
 }
