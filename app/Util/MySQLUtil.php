@@ -145,6 +145,6 @@ class MySQLUtil
             }
         }
 
-        return ' WHERE ' . ltrim(trim($whereStr), 'AND');
+        return ' WHERE' . ltrim(trim($whereStr), 'AND');
     }
 }
