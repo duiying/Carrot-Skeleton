@@ -5,30 +5,23 @@ namespace App\Module\Index\Action;
 use App\Constant\TaskConstant;
 use App\Module\Index\Logic\IndexLogic;
 use App\Util\HttpUtil;
-use Carrot\Lib\Logger;
+use App\Util\MySQLUtil;
 use Carrot\Server\HttpServer;
+use DuiYing\Logger;
 
 class IndexAction
 {
     public function index($request, $response)
     {
         // 投递一个测试 Task
-        HttpServer::deliveryTask(TaskConstant::TASK_NAME_TEST, ['key' => 'val']);
+        // HttpServer::deliveryTask(TaskConstant::TASK_NAME_TEST, ['key' => 'val']);
 
-        $logger = Logger::getInstance();
+        $mysqlUtil = MySQLUtil::getInstance()->getConnection('127.0.0.1', 'root', 'WYX*wyx123', 'account');
 
-        $data = [
-            'method' => $request->server['request_method'],
-            'message' => 'Hello Carrot',
-        ];
+        $mysqlUtil->search('t_user');
 
-        $logger->info('index 方法打印日志', $data);
+        HttpUtil::success($response);
 
-        HttpUtil::success($response, $data);
-    }
-
-    public function testDB($request, $response)
-    {
-        $logic = IndexLogic::getInstance();
+        Logger::getInstance()->info("测试", 111);
     }
 }

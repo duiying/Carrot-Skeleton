@@ -2,31 +2,54 @@
 
 namespace App\Util;
 
-use Carrot\Singleton;
 use DuiYing\Logger;
 
-class MySQL
+class MySQLUtil
 {
-    use Singleton;
+    /**
+     * @var \mysqli
+     */
+    public $conn;
 
     /**
+     * 获取本类实例化对象
+     *
+     * @return MySQLUtil
+     */
+    public static function getInstance()
+    {
+        return new self();
+    }
+
+    /**
+     * 建立连接
+     *
      * @param $host
      * @param $user
      * @param $pass
      * @param $db
-     * @param $port
-     * @return false|\mysqli
+     * @param int $port
+     * @param string $charset
+     * @return MySQLUtil
      */
-    public function getConnection($host, $user, $pass, $db, $port)
+    public function getConnection($host, $user, $pass, $db, $port = 3306, $charset = 'utf8mb4')
     {
-        $connection = mysqli_connect($host, $user, $pass, $db, $port);
-        mysqli_set_charset($connection, 'utf8mb4');
-        return $connection;
+        $this->conn = mysqli_connect($host, $user, $pass, $db, $port);
+        mysqli_set_charset($this->conn, $charset);
+        return $this;
     }
 
-    public function search(\mysqli $connection, string $table, array $where = [], int $p = 0, int $size = 0, array $columns = ['*'], array $orderBy = [])
+    /**
+     * 断开连接
+     */
+    public function closeConnection()
     {
-        $sql        = sprintf('SELECT %s FROM `%s` ', $this->buildColumn($columns), $table);
+        $this->conn->close();
+    }
+
+    public function search(string $table, array $where = [], int $p = 0, int $size = 0, array $columns = ['*'], array $orderBy = [])
+    {
+        $sql = sprintf('SELECT %s FROM `%s` ', $this->buildColumn($columns), $table);
         $sql .= $this->buildWhere($where);
         $sql .= $this->buildOrderBy($orderBy);
         if ($p && $size) {
@@ -34,7 +57,7 @@ class MySQL
             $sql .= sprintf('LIMIT %d,%d ', $offset, $size);
         }
         Logger::getInstance()->info("SQL", $sql);
-        $result = $connection->query($sql);
+        $result = $this->conn->query($sql);
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
@@ -63,7 +86,6 @@ class MySQL
         }
         return rtrim($str, ',');
     }
-
 
     public function buildWhere($where = [])
     {
