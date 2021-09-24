@@ -6,6 +6,9 @@ use DuiYing\Logger;
 
 class MySQLUtil
 {
+    const CODE_CONNECTION_FAIL      = 500;
+    const CODE_CONNECTION_FAIL_MSG  = '连接数据库失败';
+
     /**
      * @var \mysqli
      */
@@ -30,11 +33,13 @@ class MySQLUtil
      * @param $db
      * @param int $port
      * @param string $charset
-     * @return MySQLUtil
+     * @return $this
+     * @throws \Exception
      */
     public function getConnection($host, $user, $pass, $db, $port = 3306, $charset = 'utf8mb4')
     {
         $this->conn = mysqli_connect($host, $user, $pass, $db, $port);
+        if ($this->conn === false) throw new \Exception(self::CODE_CONNECTION_FAIL_MSG, self::CODE_CONNECTION_FAIL);
         mysqli_set_charset($this->conn, $charset);
         return $this;
     }
