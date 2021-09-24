@@ -209,7 +209,6 @@ class MySQLUtil
         if (empty($table) || empty($where)) throw new \Exception(self::CODE_SQL_ERROR_MSG, self::CODE_SQL_ERROR);
         $sql = sprintf('DELETE FROM `%s`', $table);
         $sql .= $this->buildWhere($where);
-        Logger::getInstance()->info('SQL', $sql);
         $this->query($sql);
         return $this->conn->affected_rows;
     }
