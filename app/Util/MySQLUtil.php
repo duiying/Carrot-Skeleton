@@ -85,6 +85,14 @@ class MySQLUtil
         return $list ? (array)$list[0] : [];
     }
 
+    public function create(string $table, array $data = [])
+    {
+        $keyList = array_keys($data);
+        $valueList = array_values($data);
+
+        $sql = sprintf('INSERT INTO `%s` (%s) VALUES ()', $table, $this->buildColumn($keyList));
+    }
+
     public function buildOrderBy($orderBy)
     {
         if (empty($orderBy)) return '';

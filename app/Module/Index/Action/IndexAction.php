@@ -23,11 +23,11 @@ class IndexAction
 
         $table = 't_user';
         $where = ['id' => ['>', 1]];
-        $list = $db->search($table, $where);
-        $total = $db->count($table, $where);
-        $user = $db->find($table, ['id' => 1]);
+        //$list = $db->search($table, $where);
+        //$total = $db->count($table, $where);
+        $user = $db->find($table, ['id' => 1, 'name' => "duiying'"]);
         $db->closeConnection();
 
-        return $response->end(HttpUtil::success(['list' => $list, 'total' => $total, 'user' => $user]));
+        return $response->end(HttpUtil::success(['user' => $user]));
     }
 }
