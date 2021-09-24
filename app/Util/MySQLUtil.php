@@ -89,6 +89,14 @@ class MySQLUtil
         return $list ? (array)$list[0] : [];
     }
 
+    /**
+     * 创建
+     *
+     * @param string $table
+     * @param array $data
+     * @return int|string
+     * @throws \Exception
+     */
     public function create(string $table, array $data = [])
     {
         $keyList = array_keys($data);
@@ -107,7 +115,9 @@ class MySQLUtil
 
         $sql = rtrim($sql, ',');
         $sql .= ')';
-        Logger::getInstance()->info("SQL", $sql);
+        $result = $this->conn->query($sql);
+        if ($result === false) throw new \Exception(self::CODE_SQL_ERROR_MSG, self::CODE_SQL_ERROR);
+        return mysqli_insert_id($this->conn);
     }
 
     public function buildOrderBy($orderBy)
