@@ -4,13 +4,16 @@ namespace App\Module\Index\Action;
 
 use App\Constant\TaskConstant;
 use App\Module\Index\Logic\IndexLogic;
-use App\Util\HttpUtil;
 use App\Util\MySQLUtil;
+use Carrot\HttpUtil;
 use Carrot\Server\HttpServer;
+use Carrot\Singleton;
 use DuiYing\Logger;
 
 class IndexAction
 {
+    use Singleton;
+
     public function index($request, $response)
     {
         // 投递一个测试 Task
