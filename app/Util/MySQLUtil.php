@@ -207,7 +207,7 @@ class MySQLUtil
     {
         // DELETE 操作是危险操作，必须带 WHERE 条件
         if (empty($data)) throw new \Exception(self::CODE_SQL_ERROR_MSG, self::CODE_SQL_ERROR);
-        $sql = sprintf('DELETE FROM `%s`');
+        $sql = sprintf('DELETE FROM `%s`', $table);
         $sql .= $this->buildWhere($where);
         Logger::getInstance()->info('SQL', $sql);
         $this->query($sql);
