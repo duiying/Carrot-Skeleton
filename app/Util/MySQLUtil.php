@@ -2,8 +2,6 @@
 
 namespace App\Util;
 
-use DuiYing\Logger;
-
 class MySQLUtil
 {
     const CODE_CONNECTION_FAIL              = 500;
@@ -83,6 +81,8 @@ class MySQLUtil
      */
     public function search(string $table, array $where = [], int $p = 1, int $size = 0, array $columns = ['*'], array $orderBy = [])
     {
+        if (empty($table)) throw new \Exception(self::CODE_SQL_ERROR_MSG, self::CODE_SQL_ERROR);
+
         $sql = sprintf('SELECT %s FROM `%s`', $this->buildColumn($columns), $table);
         $sql .= $this->buildWhere($where);
         $sql .= $this->buildOrderBy($orderBy);
@@ -91,7 +91,6 @@ class MySQLUtil
             $sql .= sprintf(' LIMIT %d,%d ', $offset, $size);
         }
         $sql = trim($sql);
-        Logger::getInstance()->info("SQL", $sql);
         $result = $this->query($sql);
         return $result->fetch_all(MYSQLI_ASSOC);
     }
@@ -106,10 +105,11 @@ class MySQLUtil
      */
     public function count(string $table, array $where = [])
     {
+        if (empty($table)) throw new \Exception(self::CODE_SQL_ERROR_MSG, self::CODE_SQL_ERROR);
+
         $sql = sprintf('SELECT count(*) `count` FROM `%s` ', $table);
         $sql .= $this->buildWhere($where);
         $sql = trim($sql);
-        Logger::getInstance()->info("SQL", $sql);
         $result = $this->query($sql);
         $count = $result->fetch_assoc()['count'];
         return $count ? intval($count) : 0;
@@ -127,6 +127,7 @@ class MySQLUtil
      */
     public function find(string $table, array $where = [], array $columns = ['*'], array $orderBy = [])
     {
+        if (empty($table)) throw new \Exception(self::CODE_SQL_ERROR_MSG, self::CODE_SQL_ERROR);
         $list = $this->search($table, $where, 1, 1, $columns, $orderBy);
         return $list ? (array)$list[0] : [];
     }
@@ -141,6 +142,8 @@ class MySQLUtil
      */
     public function create(string $table, array $data = [])
     {
+        if (empty($table) || empty($data)) throw new \Exception(self::CODE_SQL_ERROR_MSG, self::CODE_SQL_ERROR);
+
         $keyList = array_keys($data);
         $valueList = array_values($data);
 
@@ -172,7 +175,7 @@ class MySQLUtil
      */
     public function update(string $table, array $where = [], array $data = [])
     {
-        if (empty($data)) throw new \Exception(self::CODE_SQL_ERROR_MSG, self::CODE_SQL_ERROR);
+        if (empty($table) || empty($data)) throw new \Exception(self::CODE_SQL_ERROR_MSG, self::CODE_SQL_ERROR);
 
         $sql = sprintf('UPDATE `%s` SET', $table);
 
@@ -188,10 +191,7 @@ class MySQLUtil
 
         $sql = rtrim($sql, ',');
         $sql .= $this->buildWhere($where);
-        Logger::getInstance()->info('SQL', $sql);
-
         $this->query($sql);
-
         return $this->conn->affected_rows;
     }
 
@@ -206,7 +206,7 @@ class MySQLUtil
     public function delete(string $table, array $where = [])
     {
         // DELETE 操作是危险操作，必须带 WHERE 条件
-        if (empty($where)) throw new \Exception(self::CODE_SQL_ERROR_MSG, self::CODE_SQL_ERROR);
+        if (empty($table) || empty($where)) throw new \Exception(self::CODE_SQL_ERROR_MSG, self::CODE_SQL_ERROR);
         $sql = sprintf('DELETE FROM `%s`', $table);
         $sql .= $this->buildWhere($where);
         Logger::getInstance()->info('SQL', $sql);
