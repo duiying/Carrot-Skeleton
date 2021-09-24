@@ -7,12 +7,11 @@ class HttpUtil
     /**
      * HTTP 成功响应数据
      *
-     * @param $response
      * @param array $data
      * @param string $msg
-     * @return mixed
+     * @return false|string
      */
-    public static function success($response, $data = [], $msg = 'success')
+    public static function success($data = [], $msg = 'success')
     {
         $formatData = [
             'code'  => 0,
@@ -20,7 +19,6 @@ class HttpUtil
             'data'  => $data
         ];
 
-        $data = json_encode($formatData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        return $response->end($data);
+        return json_encode($formatData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 }
