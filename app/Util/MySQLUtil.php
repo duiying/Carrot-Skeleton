@@ -128,15 +128,30 @@ class MySQLUtil
         foreach ($where as $field => $value) {
             if (is_null($value)) continue;
 
+            // 转义
+            if (is_string($value)) $value = $this->conn->real_escape_string($value);
+
             if (!is_array($value)) {
                 $whereStr .= sprintf("AND `%s` = '%s' ", $field, $value);
                 continue;
             }
 
             switch ($value[0]) {
-                case '=':   if (!is_array($value[1]))   $whereStr .= sprintf("AND `%s` = '%s' ", $field, $value[1]); break;
+                case '=':
+                    if (!is_array($value[1])) {
+                        // 转义
+                        if (is_string($value[1])) $value[1] = $this->conn->real_escape_string($value[1]);
+                        $whereStr .= sprintf("AND `%s` = '%s' ", $field, $value[1]);
+                    }
+                    break;
                 case '!=':
-                case '<>':  if (!is_array($value[1]))   $whereStr .= sprintf("AND `%s` <> '%s' ", $field, $value[1]); break;
+                case '<>':
+                    if (!is_array($value[1])) {
+                        // 转义
+                        if (is_string($value[1])) $value[1] = $this->conn->real_escape_string($value[1]);
+                        $whereStr .= sprintf("AND `%s` <> '%s' ", $field, $value[1]);
+                    }
+                    break;
                 case '%':   if (!is_array($value[1]))   $whereStr .= sprintf("AND `%s` LIKE '%s' ", $field, $value[1]); break;
                 case '<':   if (!is_array($value[1]))   $whereStr .= sprintf("AND `%s` < %d ", $field, $value[1]); break;
                 case '<=':  if (!is_array($value[1]))   $whereStr .= sprintf("AND `%s` <= %d ", $field, $value[1]); break;
@@ -146,6 +161,9 @@ class MySQLUtil
                 default:
                     $whereStr .= "AND `{$field}` IN (";
                     foreach ($value as $k => $v) {
+                        if (is_string($v)) {
+                            $v = $this->conn->real_escape_string($v);
+                        }
                         $whereStr .= sprintf("'%s',", $v);
                     }
                     $whereStr = rtrim($whereStr, ',');
