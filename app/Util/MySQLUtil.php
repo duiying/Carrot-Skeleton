@@ -190,11 +190,15 @@ class MySQLUtil
         foreach ($where as $field => $value) {
             if (is_null($value)) continue;
 
-            // 转义
-            if (is_string($value)) $value = $this->conn->real_escape_string($value);
-
             if (!is_array($value)) {
-                $whereStr .= sprintf("AND `%s` = '%s' ", $field, $value);
+                if (is_string($value)) {
+                    // 转义
+                    $value = $this->conn->real_escape_string($value);
+                    $whereStr .= sprintf("AND `%s` = '%s' ", $field, $value);
+                } else {
+                    $whereStr .= sprintf("AND `%s` = %s ", $field, $value);
+                }
+
                 continue;
             }
 
@@ -225,8 +229,10 @@ class MySQLUtil
                     foreach ($value as $k => $v) {
                         if (is_string($v)) {
                             $v = $this->conn->real_escape_string($v);
+                            $whereStr .= sprintf("'%s',", $v);
+                        } else {
+                            $whereStr .= sprintf("%s,", $v);
                         }
-                        $whereStr .= sprintf("'%s',", $v);
                     }
                     $whereStr = rtrim($whereStr, ',');
                     $whereStr .= ") ";
