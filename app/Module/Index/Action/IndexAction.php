@@ -26,8 +26,9 @@ class IndexAction
         //$list = $db->search($table, $where);
         //$total = $db->count($table, $where);
         $user = $db->find($table, ['id' => 1, 'name' => "duiying'"]);
-        $affected = $db->update($table, ['id' => [1, 2]], ['position' => '测试职位1']);
+        //$affected = $db->update($table, ['id' => [1, 2]], ['position' => '测试职位1']);
+        $id = $db->create($table, ['name' => "lili's", 'email' => 'lili@gmail.com', 'mobile' => '19900008888'])
 
-        return $response->end(HttpUtil::success(['user' => $user, 'affected' => $affected]));
+        return $response->end(HttpUtil::success(['user' => $user, 'id' => $id]));
     }
 }
