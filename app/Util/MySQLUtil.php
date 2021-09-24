@@ -56,6 +56,7 @@ class MySQLUtil
             $offset = ($p - 1) * $size;
             $sql .= sprintf('LIMIT %d,%d ', $offset, $size);
         }
+        $sql = trim($sql);
         Logger::getInstance()->info("SQL", $sql);
         $result = $this->conn->query($sql);
         return $result->fetch_all(MYSQLI_ASSOC);
