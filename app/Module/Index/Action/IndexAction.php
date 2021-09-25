@@ -22,7 +22,16 @@ class IndexAction
         $db = MySQLUtil::getInstance()->getConnection('127.0.0.1', 'root', 'WYX*wyx123', 'account');
         $table = 't_user';
         $user = $db->find($table, ['id' => 1, 'name' => "duiying'"]);
-        $del = $db->delete($table, ['id' => ['>', 4]]);
+
+        try {
+            $db->beginTransaction();
+            $db->update($table, ['id' => 1], ['name' => 'duiying']);
+            $db->create($table);
+            $db->commmit();
+        } catch (\Exception $exception) {
+            $db->rollback();
+            Logger::getInstance()->info('exception', ['code' => $exception->getCode(), 'msg' => $exception->getMessage()]);
+        }
 
         return $response->end(HttpUtil::success(['user' => $user, 'del' => $del]));
     }
