@@ -33,6 +33,8 @@ class IndexAction
             Logger::getInstance()->info('exception', ['code' => $exception->getCode(), 'msg' => $exception->getMessage()]);
         }
 
-        return $response->end(HttpUtil::success(['user' => $user, 'del' => $del]));
+        $db->closeConnection();
+
+        return $response->end(HttpUtil::success(['user' => $user]));
     }
 }
