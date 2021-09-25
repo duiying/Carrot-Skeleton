@@ -8,6 +8,12 @@ class MySQLUtil
     const CODE_CONNECTION_FAIL_MSG          = '连接数据库失败';
     const CODE_SQL_ERROR                    = 501;
     const CODE_SQL_ERROR_MSG                = 'SQL 执行失败';
+    const CODE_BEGIN_ERROR                  = 502;
+    const CODE_BEGIN_ERROR_MSG              = '开启事务失败';
+    const CODE_COMMIT_ERROR                 = 503;
+    const CODE_COMMIT_ERROR_MSG             = '提交事务失败';
+    const CODE_ROLLBACK_ERROR               = 504;
+    const CODE_ROLLBACK_ERROR_MSG           = '回滚事务失败';
 
     /**
      * @var \mysqli
@@ -51,6 +57,45 @@ class MySQLUtil
     public function closeConnection()
     {
         $this->conn->close();
+    }
+
+    /**
+     * 开启事务
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public function beginTransaction()
+    {
+        $result = $this->conn->begin_transaction(MYSQLI_TRANS_START_WITH_CONSISTENT_SNAPSHOT);
+        if ($result === false) throw new \Exception(self::CODE_BEGIN_ERROR_MSG, self::CODE_BEGIN_ERROR);
+        return true;
+    }
+
+    /**
+     * 提交事务
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public function commmit()
+    {
+        $result = $this->conn->commit();
+        if ($result === false) throw new \Exception(self::CODE_COMMIT_ERROR_MSG, self::CODE_COMMIT_ERROR);
+        return true;
+    }
+
+    /**
+     * 提交事务
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public function rollback()
+    {
+        $result = $this->conn->rollback();
+        if ($result === false) throw new \Exception(self::CODE_ROLLBACK_ERROR_MSG, self::CODE_ROLLBACK_ERROR);
+        return true;
     }
 
     /**
