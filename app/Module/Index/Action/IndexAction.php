@@ -4,11 +4,11 @@ namespace App\Module\Index\Action;
 
 use App\Constant\TaskConstant;
 use App\Module\Index\Logic\IndexLogic;
-use App\Util\MySQLUtil;
 use Carrot\HttpUtil;
 use Carrot\Server\HttpServer;
 use Carrot\Singleton;
 use DuiYing\Logger;
+use DuiYing\MySQLUtil;
 
 class IndexAction
 {
